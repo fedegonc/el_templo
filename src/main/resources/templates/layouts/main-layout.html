@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">El Templo Barbería</title>
+    
+    <!-- Font Awesome para íconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        barber: {
+                            dark: '#111111',
+                            light: '#333333',
+                            accent: '#25D366'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Estilos mínimos necesarios -->
+    <style>
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('/img/fondo.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0.6;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body class="font-sans bg-black text-white relative">
+    <!-- Navbar con logo -->
+    <nav class="sticky top-0 z-50 bg-barber-dark shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
+            <a href="/" class="flex items-center">
+                <img src="/img/logo.png" alt="El Templo Barbería" class="h-14 w-auto">
+                <span class="ml-3 text-xl font-bold uppercase tracking-wider">El Templo</span>
+            </a>
+            <div class="flex space-x-4">
+                <a href="/" class="text-white hover:bg-barber-light px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">Agenda</a>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Contenido principal que será reemplazado por cada página -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 bg-opacity-70 bg-black backdrop-blur-sm rounded-lg shadow-xl mt-6 mb-6">
+        <div layout:fragment="content">
+            <!-- Aquí se insertará el contenido de cada página -->
+        </div>
+    </div>
+    
+    <!-- Información de contacto y botón de WhatsApp -->
+    <div class="fixed bottom-6 right-6 flex items-center z-50">
+        <div class="bg-black bg-opacity-70 text-white px-4 py-2 rounded-full mr-3 font-bold">
+            099 735 980
+        </div>
+        <a href="https://wa.me/598099735980" target="_blank" class="bg-barber-accent hover:bg-green-500 w-12 h-12 flex items-center justify-center rounded-full shadow-lg transition-transform hover:scale-110">
+            <i class="fab fa-whatsapp text-white text-2xl"></i>
+        </a>
+    </div>
+    
+    <!-- Enlace discreto a la página de administración -->
+    <div class="fixed bottom-1 left-1">
+        <a href="/admin" class="text-gray-700 hover:text-gray-500 text-xs">Admin</a>
+    </div>
+    
+    <!-- Espacio para scripts adicionales específicos de cada página -->
+    <th:block layout:fragment="scripts"></th:block>
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/main-layout}">
+<head>
+    <title>Administración</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <!-- Encabezado con título y estadísticas -->
+        <div class="bg-barber-dark bg-opacity-80 rounded-lg shadow-lg p-6 mb-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <h1 class="text-2xl md:text-3xl font-bold mb-4 md:mb-0">
+                    Panel de Administración
+                </h1>
+                
+                <div class="flex flex-wrap gap-4">
+                    <div class="bg-black bg-opacity-50 px-4 py-2 rounded-lg text-center">
+                        <p class="text-sm text-gray-400">Total</p>
+                        <p class="text-2xl font-bold" th:text="${#lists.size(turnos)}">0</p>
+                    </div>
+                    <div class="bg-black bg-opacity-50 px-4 py-2 rounded-lg text-center">
+                        <p class="text-sm text-gray-400">Confirmados</p>
+                        <p class="text-2xl font-bold" th:text="${#lists.size(turnos.?[estado == T(com.eco.app.model.EstadoTurno).CONFIRMADO])}">0</p>
+                    </div>
+                    <div class="bg-black bg-opacity-50 px-4 py-2 rounded-lg text-center">
+                        <p class="text-sm text-gray-400">Completados</p>
+                        <p class="text-2xl font-bold" th:text="${#lists.size(turnos.?[estado == T(com.eco.app.model.EstadoTurno).COMPLETADO])}">0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mensaje de alerta -->
+        <div th:if="${mensaje}" class="bg-barber-dark border-l-4 border-green-500 p-4 mb-6 rounded-r-md shadow-md">
+            <span th:text="${mensaje}" class="text-white">Mensaje</span>
+        </div>
+        
+        <!-- Listado de turnos -->
+        <div class="bg-barber-dark bg-opacity-80 rounded-lg shadow-lg p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold">
+                    Turnos Agendados
+                </h2>
+                <a href="/agenda" class="text-sm text-gray-300 hover:text-white transition-colors">
+                    Volver a la agenda
+                </a>
+            </div>
+            
+            <!-- Mensaje si no hay turnos -->
+            <div th:if="${#lists.isEmpty(turnos)}" class="bg-black bg-opacity-50 rounded-lg p-6 text-center">
+                <i class="far fa-calendar-times text-4xl text-gray-500 mb-2"></i>
+                <p class="text-gray-400">No hay turnos agendados</p>
+            </div>
+            
+            <!-- Tabla de turnos -->
+            <div th:if="${!#lists.isEmpty(turnos)}" class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="bg-black bg-opacity-50 text-left">
+                            <th class="px-4 py-3 rounded-tl-lg">Cliente</th>
+                            <th class="px-4 py-3">Celular</th>
+                            <th class="px-4 py-3">Fecha</th>
+                            <th class="px-4 py-3">Hora</th>
+                            <th class="px-4 py-3">Estado</th>
+                            <th class="px-4 py-3 rounded-tr-lg text-right">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="turno, iterStat : ${turnos}" 
+                            th:class="${iterStat.odd}? 'bg-black bg-opacity-30' : 'bg-black bg-opacity-10'">
+                            <td class="px-4 py-3 border-b border-gray-800">
+                                <div class="flex items-center">
+                                    <div class="h-8 w-8 rounded-full bg-barber-light flex items-center justify-center mr-3">
+                                        <span th:text="${#strings.substring(turno.nombreCliente,0,1).toUpperCase()}" class="text-white font-bold">N</span>
+                                    </div>
+                                    <span th:text="${turno.nombreCliente}" class="font-medium">Nombre</span>
+                                </div>
+                            </td>
+                            <td class="px-4 py-3 border-b border-gray-800">
+                                <span th:text="${turno.celular}" class="text-gray-300">Celular</span>
+                            </td>
+                            <td class="px-4 py-3 border-b border-gray-800">
+                                <span th:text="${#temporals.format(turno.fecha, 'dd/MM/yyyy')}" class="text-gray-300">Fecha</span>
+                            </td>
+                            <td class="px-4 py-3 border-b border-gray-800">
+                                <span th:text="${#temporals.format(turno.hora, 'HH:mm')}" class="text-gray-300">Hora</span>
+                            </td>
+                            <td class="px-4 py-3 border-b border-gray-800">
+                                <span th:class="${{EN_ESPERA: 'bg-yellow-500', CONFIRMADO: 'bg-green-500', CANCELADO: 'bg-red-500', COMPLETADO: 'bg-blue-500'}[turno.estado]} + ' px-2 py-1 rounded-full text-white text-xs font-bold'" 
+                                      th:text="${turno.estado.descripcion}">Estado</span>
+                            </td>
+                            <td class="px-4 py-3 border-b border-gray-800 text-right flex justify-end space-x-1">
+                                <!-- Confirmar turno -->
+                                <form th:if="${turno.estado == T(com.eco.app.model.EstadoTurno).EN_ESPERA || turno.estado == T(com.eco.app.model.EstadoTurno).CANCELADO}" th:action="@{/admin/estado/{id}(id=${turno.id}, estado='CONFIRMADO')}" method="post" class="inline">
+                                    <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-2 py-1 rounded text-xs transition-colors">
+                                        <span th:text="${turno.estado == T(com.eco.app.model.EstadoTurno).CANCELADO ? 'Reactivar' : 'Confirmar'}"></span>
+                                    </button>
+                                </form>
+                                
+                                <!-- Completar turno -->
+                                <form th:if="${turno.estado == T(com.eco.app.model.EstadoTurno).CONFIRMADO}" th:action="@{/admin/estado/{id}(id=${turno.id}, estado='COMPLETADO')}" method="post" class="inline">
+                                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded text-xs transition-colors">
+                                        Completar
+                                    </button>
+                                </form>
+                                
+                                <!-- Cancelar turno -->
+                                <form th:if="${turno.estado == T(com.eco.app.model.EstadoTurno).EN_ESPERA || turno.estado == T(com.eco.app.model.EstadoTurno).CONFIRMADO}" th:action="@{/admin/estado/{id}(id=${turno.id}, estado='CANCELADO')}" method="post" class="inline">
+                                    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded text-xs transition-colors">
+                                        Cancelar
+                                    </button>
+                                </form>
+                                
+                                <!-- Eliminar turno -->
+                                <form th:action="@{/admin/borrar/{id}(id=${turno.id})}" method="post" class="inline">
+                                    <button type="submit" class="bg-gray-700 hover:bg-gray-800 text-white px-2 py-1 rounded text-xs transition-colors">
+                                        Eliminar
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

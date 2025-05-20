@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <!-- Fragmento del navbar -->
+    <nav th:fragment="navbar" class="navbar">
+        <div class="navbar-container">
+            <a href="/">
+                <img src="/img/logo.png" alt="El Templo Barbería" class="logo">
+                <h1>El Templo Barbería</h1></a>
+            
+            <div class="nav-links">
+                <a href="/">Agenda</a>
+                <a href="/admin">Admin</a>
+            </div>
+        </div>
+    </nav>
+</body>
+</html>

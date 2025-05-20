@@ -1,0 +1,142 @@
+### Java ###
+# Archivos compilados
+*.class
+
+# Archivos de log
+*.log
+logs/
+
+# Archivos BlueJ
+*.ctxt
+
+# Archivos Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Archivos de paquete #
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Logs de errores de la máquina virtual
+hs_err_pid*
+replay_pid*
+
+### Maven ###
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+### STS/Eclipse ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+*.code-workspace
+.history/
+
+### Spring Boot ###
+**/application-local.properties
+**/application-dev.properties
+**/application-prod.properties
+**/application-test.properties
+**/application-*.yml
+**/application-*.yaml
+!**/application.properties
+!**/application.yml
+!**/application.yaml
+
+### Archivos del sistema operativo ###
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Linux
+*~
+.directory
+.Trash-*
+
+### Archivos de configuración sensibles ###
+# Archivos de credenciales
+*.pem
+*.key
+*.p12
+*.jks
+*.keystore
+
+# Archivos de entorno
+.env
+.env.*
+!.env.example
+
+### AWS ###
+# AWS Credentials
+aws.properties
+aws-credentials.properties
+**/aws-credentials.json
+
+### Archivos específicos del proyecto ###
+# Archivos de configuración específicos
+/config/application-*.properties
+/config/application-*.yml
+application-*.properties
+application-*.yml
+application-*.yaml
+# Archivos de base de datos
+*.db
+*.sqlite
+*.sqlite3
+h2db/
+
+# Archivos temporales
+temp/
+tmp/
+*.tmp
+*.swp
+*.bak
+src/main/resources/application.properties

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/main-layout}">
+<head>
+    <title>Agenda</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <h1 class="text-2xl font-bold text-center mb-6">El Templo Barbería</h1>
+
+        <!-- Mensaje de alerta -->
+        <div th:if="${mensaje}" class="bg-barber-dark border-l-4 border-green-500 p-4 mb-6 rounded-r-md shadow-md">
+            <span th:text="${mensaje}" class="text-white">Mensaje</span>
+        </div>
+
+        <!-- Diseño de dos columnas -->
+        <div class="flex flex-wrap md:flex-nowrap gap-4">
+            <!-- Columna izquierda - Formulario de reserva -->
+            <div class="w-full md:w-1/3 lg:w-1/3">
+                <div class="bg-barber-dark bg-opacity-80 rounded-lg shadow-lg p-6 mb-6">
+                    <h2 class="text-xl font-bold mb-4 pb-2 border-b border-gray-700">Reservá tu turno</h2>
+                    <form th:action="@{/agendar}" th:object="${nuevoTurno}" method="post" class="space-y-4">
+                        <div>
+                            <label for="nombreCliente" class="block text-sm font-medium mb-1">Nombre:</label>
+                            <input type="text" th:field="*{nombreCliente}" placeholder="Tu nombre" required
+                                class="w-full px-3 py-2 bg-white text-black rounded border border-gray-600 focus:outline-none focus:ring-2 focus:ring-barber-accent">
+                        </div>
+                        <div>
+                            <label for="fecha" class="block text-sm font-medium mb-1">Fecha:</label>
+                            <input type="date" th:field="*{fecha}" th:min="${fechaHoy}" pattern="yyyy-MM-dd" required
+                                class="w-full px-3 py-2 bg-white text-black rounded border border-gray-600 focus:outline-none focus:ring-2 focus:ring-barber-accent">
+                        </div>
+                        <div>
+                            <label for="hora" class="block text-sm font-medium mb-1">Hora:</label>
+                            <div class="relative">
+                                <select th:field="*{hora}" required
+                                    class="w-full px-3 py-2 bg-white text-black rounded border border-gray-600 focus:outline-none focus:ring-2 focus:ring-barber-accent appearance-none cursor-pointer hover:border-barber-accent transition-colors">
+                                    <option value="">Selecciona una hora</option>
+                                    <option value="10:00">10:00</option>
+                                    <option value="10:30">10:30</option>
+                                    <option value="11:00">11:00</option>
+                                    <option value="11:30">11:30</option>
+                                    <option value="12:00">12:00</option>
+                                    <option value="12:30">12:30</option>
+                                    <option value="13:00">13:00</option>
+                                    <option value="13:30">13:30</option>
+                                    <option value="14:00">14:00</option>
+                                    <option value="14:30">14:30</option>
+                                    <option value="15:00">15:00</option>
+                                    <option value="15:30">15:30</option>
+                                    <option value="16:00">16:00</option>
+                                    <option value="16:30">16:30</option>
+                                    <option value="17:00">17:00</option>
+                                    <option value="17:30">17:30</option>
+                                    <option value="18:00">18:00</option>
+                                    <option value="18:30">18:30</option>
+                                    <option value="19:00">19:00</option>
+                                    <option value="19:30">19:30</option>
+                                    <option value="20:00">20:00</option>
+                                    <option value="20:30">20:30</option>
+                                </select>
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                    <i class="fas fa-clock text-gray-400"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="celular" class="block text-sm font-medium mb-1">Celular:</label>
+                            <input type="tel" th:field="*{celular}" placeholder="099 123 456" required 
+                                class="w-full px-3 py-2 bg-white text-black rounded border border-gray-600 focus:outline-none focus:ring-2 focus:ring-barber-accent">
+                        </div>
+                        <button type="submit" 
+                            class="w-full bg-barber-light hover:bg-barber-accent text-white font-bold py-3 px-4 rounded transition-colors duration-200">
+                            Reservar turno
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Horarios ocupados -->
+                <div class="bg-barber-dark bg-opacity-80 rounded-lg shadow-lg p-6">
+                    <h2 class="text-xl font-bold mb-4 pb-2 border-b border-gray-700">Horarios ocupados</h2>
+                    <p th:if="${#lists.isEmpty(turnos.?[estado != T(com.eco.app.model.EstadoTurno).COMPLETADO])}" class="text-gray-400 italic">Todos los horarios están disponibles</p>
+                    <ul class="space-y-3">
+                        <li th:each="turno : ${turnos.?[estado != T(com.eco.app.model.EstadoTurno).COMPLETADO]}" class="p-3 bg-black bg-opacity-50 rounded border-b border-gray-800">
+                            <span class="text-yellow-400 font-medium">Ocupado:</span>
+                            <span th:text="${#temporals.format(turno.fecha, 'dd/MM/yyyy')}" class="text-gray-300">Fecha</span> a las 
+                            <span th:text="${#temporals.format(turno.hora, 'HH:mm')}" class="text-gray-300">Hora</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Columna derecha - Video e información -->
+            <div class="w-full md:w-2/3 lg:w-2/3">
+                <!-- Video -->
+                <div class="mx-auto w-full max-w-md mb-8">
+                    
+                    <div class="rounded-lg overflow-hidden shadow-xl transform transition-transform hover:scale-[1.01]">
+                        <video controls preload="metadata" poster="/img/logo.png" class="w-full">
+                            <source src="/img/video.mp4" type="video/mp4">
+                            Tu navegador no soporta videos HTML5.
+                        </video>
+                    </div>
+                </div>
+                
+                <!-- Información -->
+                <div class="bg-barber-dark bg-opacity-80 rounded-lg shadow-lg p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h3 class="text-lg font-bold mb-3 pb-2 border-b border-gray-700">Servicios</h3>
+                            <ul class="space-y-2">
+                                <li class="flex items-center">
+                                    <i class="fas fa-cut mr-2 text-barber-accent"></i>
+                                    <span>Cortes Masculinos</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-user-friends mr-2 text-barber-accent"></i>
+                                    <span>Todas las Edades</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-scissors mr-2 text-barber-accent"></i>
+                                    <span>Tijera - Barba - Ceja</span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-lg font-bold mb-3 pb-2 border-b border-gray-700">Horarios de atención</h3>
+                            <p class="flex items-center mb-2">
+                                <i class="far fa-calendar-alt mr-2 text-barber-accent"></i>
+                                <span>De Lunes a Sábado</span>
+                            </p>
+                            <p class="flex items-center">
+                                <i class="far fa-clock mr-2 text-barber-accent"></i>
+                                <span>10:00 - 20:30 hs</span>
+                            </p>
+                            
+                            <h3 class="text-lg font-bold mt-6 mb-3 pb-2 border-b border-gray-700">Contacto</h3>
+                            <p class="flex items-center mb-2">
+                                <i class="fab fa-instagram mr-2 text-barber-accent"></i>
+                                <span>Leandrogoncalvezlf</span>
+                            </p>
+                            <p class="flex items-center">
+                                <i class="fab fa-whatsapp mr-2 text-barber-accent"></i>
+                                <span>099 735 980</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

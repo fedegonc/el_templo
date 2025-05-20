@@ -1,0 +1,15 @@
+/* Estilos personalizados mínimos que no se pueden lograr fácilmente con Tailwind */
+
+/* Estilos para elementos que requieren accesibilidad táctil en dispositivos móviles */
+@media (max-width: 768px) {
+  button, 
+  .button,
+  a,
+  input[type="submit"],
+  [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Cualquier estilo personalizado que no se pueda lograr con Tailwind iría aquí */
