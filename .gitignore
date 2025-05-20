@@ -34,10 +34,6 @@ pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup
 pom.xml.next
-release.properties
-dependency-reduced-pom.xml
-buildNumber.properties
-.mvn/timing.properties
 .mvn/wrapper/maven-wrapper.jar
 
 ### STS/Eclipse ###
@@ -70,16 +66,7 @@ build/
 *.code-workspace
 .history/
 
-### Spring Boot ###
-**/application-local.properties
-**/application-dev.properties
-**/application-prod.properties
-**/application-test.properties
-**/application-*.yml
-**/application-*.yaml
-!**/application.properties
-!**/application.yml
-!**/application.yaml
+
 
 ### Archivos del sistema operativo ###
 # Windows
@@ -116,17 +103,11 @@ $RECYCLE.BIN/
 
 ### AWS ###
 # AWS Credentials
-aws.properties
-aws-credentials.properties
-**/aws-credentials.json
+
 
 ### Archivos específicos del proyecto ###
 # Archivos de configuración específicos
-/config/application-*.properties
-/config/application-*.yml
-application-*.properties
-application-*.yml
-application-*.yaml
+
 # Archivos de base de datos
 *.db
 *.sqlite
@@ -139,4 +120,3 @@ tmp/
 *.tmp
 *.swp
 *.bak
-src/main/resources/application.properties
