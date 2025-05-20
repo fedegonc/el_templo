@@ -21,11 +21,11 @@
                     </div>
                     <div class="bg-black bg-opacity-50 px-4 py-2 rounded-lg text-center">
                         <p class="text-sm text-gray-400">Confirmados</p>
-                        <p class="text-2xl font-bold" th:text="${#lists.size(turnos.?[estado == T(com.eco.app.model.EstadoTurno).CONFIRMADO])}">0</p>
+                        <p class="text-2xl font-bold" th:text="${#lists.size(turnos.?[estado.name() == 'CONFIRMADO'])}">0</p>
                     </div>
                     <div class="bg-black bg-opacity-50 px-4 py-2 rounded-lg text-center">
                         <p class="text-sm text-gray-400">Completados</p>
-                        <p class="text-2xl font-bold" th:text="${#lists.size(turnos.?[estado == T(com.eco.app.model.EstadoTurno).COMPLETADO])}">0</p>
+                        <p class="text-2xl font-bold" th:text="${#lists.size(turnos.?[estado.name() == 'COMPLETADO'])}">0</p>
                     </div>
                 </div>
             </div>
@@ -92,21 +92,21 @@
                             </td>
                             <td class="px-4 py-3 border-b border-gray-800 text-right flex justify-end space-x-1">
                                 <!-- Confirmar turno -->
-                                <form th:if="${turno.estado == T(com.eco.app.model.EstadoTurno).EN_ESPERA || turno.estado == T(com.eco.app.model.EstadoTurno).CANCELADO}" th:action="@{/admin/estado/{id}(id=${turno.id}, estado='CONFIRMADO')}" method="post" class="inline">
+                                <form th:if="${turno.estado.name() == 'EN_ESPERA' || turno.estado.name() == 'CANCELADO'}" th:action="@{/admin/estado/{id}(id=${turno.id}, estado='CONFIRMADO')}" method="post" class="inline">
                                     <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-2 py-1 rounded text-xs transition-colors">
-                                        <span th:text="${turno.estado == T(com.eco.app.model.EstadoTurno).CANCELADO ? 'Reactivar' : 'Confirmar'}"></span>
+                                        <span th:text="${turno.estado.name() == 'CANCELADO' ? 'Reactivar' : 'Confirmar'}"></span>
                                     </button>
                                 </form>
                                 
                                 <!-- Completar turno -->
-                                <form th:if="${turno.estado == T(com.eco.app.model.EstadoTurno).CONFIRMADO}" th:action="@{/admin/estado/{id}(id=${turno.id}, estado='COMPLETADO')}" method="post" class="inline">
+                                <form th:if="${turno.estado.name() == 'CONFIRMADO'}" th:action="@{/admin/estado/{id}(id=${turno.id}, estado='COMPLETADO')}" method="post" class="inline">
                                     <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded text-xs transition-colors">
                                         Completar
                                     </button>
                                 </form>
                                 
                                 <!-- Cancelar turno -->
-                                <form th:if="${turno.estado == T(com.eco.app.model.EstadoTurno).EN_ESPERA || turno.estado == T(com.eco.app.model.EstadoTurno).CONFIRMADO}" th:action="@{/admin/estado/{id}(id=${turno.id}, estado='CANCELADO')}" method="post" class="inline">
+                                <form th:if="${turno.estado.name() == 'EN_ESPERA' || turno.estado.name() == 'CONFIRMADO'}" th:action="@{/admin/estado/{id}(id=${turno.id}, estado='CANCELADO')}" method="post" class="inline">
                                     <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded text-xs transition-colors">
                                         Cancelar
                                     </button>

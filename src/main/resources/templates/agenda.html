@@ -80,9 +80,9 @@
                 <!-- Horarios ocupados -->
                 <div class="bg-barber-dark bg-opacity-80 rounded-lg shadow-lg p-6">
                     <h2 class="text-xl font-bold mb-4 pb-2 border-b border-gray-700">Horarios ocupados</h2>
-                    <p th:if="${#lists.isEmpty(turnos.?[estado != T(com.eco.app.model.EstadoTurno).COMPLETADO])}" class="text-gray-400 italic">Todos los horarios están disponibles</p>
+                    <p th:if="${#lists.isEmpty(turnos.?[estado.name() != 'COMPLETADO'])}" class="text-gray-400 italic">Todos los horarios están disponibles</p>
                     <ul class="space-y-3">
-                        <li th:each="turno : ${turnos.?[estado != T(com.eco.app.model.EstadoTurno).COMPLETADO]}" class="p-3 bg-black bg-opacity-50 rounded border-b border-gray-800">
+                        <li th:each="turno : ${turnos.?[estado.name() != 'COMPLETADO']}" class="p-3 bg-black bg-opacity-50 rounded border-b border-gray-800">
                             <span class="text-yellow-400 font-medium">Ocupado:</span>
                             <span th:text="${#temporals.format(turno.fecha, 'dd/MM/yyyy')}" class="text-gray-300">Fecha</span> a las 
                             <span th:text="${#temporals.format(turno.hora, 'HH:mm')}" class="text-gray-300">Hora</span>

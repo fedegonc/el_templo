@@ -41,7 +41,7 @@ public class Turno {
     private LocalTime hora;
     
     @NotBlank(message = "El número de celular es obligatorio")
-    @Pattern(regexp = "^[0-9]{3}\\s?[0-9]{3}\\s?[0-9]{3}$", message = "Formato de celular inválido (ej: 099 123 456)")
+    @Pattern(regexp = "^[0-9]{3}\\s?[0-9]{3}\\s?[0-9]{3}$", message = "Formato de celular inválido. Debe ingresar 9 dígitos (formatos aceptados: Uruguay: 099 123 456, Brasil: 048 555 123)")
     private String celular;
     
     @Enumerated(EnumType.STRING)
