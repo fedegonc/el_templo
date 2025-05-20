@@ -33,11 +33,34 @@ jobs:
           target: /home/ec2-user/app/
 
       - name: Restart app on EC2
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@v0.1.4
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ec2-user
           key: ${{ secrets.EC2_KEY }}
           script: |
-            pkill -f 'java -jar' || true
-            nohup java -jar /home/ec2-user/app/$(ls -t /home/ec2-user/app/*.jar | head -n 1) > output.log 2>&1 &
+            # Detener la aplicación actual si está en ejecución
+            pkill -f 'java -jar' || echo "No hay procesos Java en ejecución"
+            
+            # Asegurar que el directorio existe
+            mkdir -p /home/ec2-user/app/logs
+            
+            # Obtener el nombre del JAR más reciente
+            JAR_FILE=$(ls -t /home/ec2-user/app/*.jar | head -n 1)
+            echo "Iniciando aplicación con: $JAR_FILE"
+            
+            # Iniciar la aplicación en segundo plano
+            cd /home/ec2-user/app
+            nohup java -jar $JAR_FILE > /home/ec2-user/app/logs/output.log 2>&1 &
+            
+            # Esperar unos segundos para asegurar que la aplicación inicie
+            sleep 5
+            
+            # Verificar que la aplicación está en ejecución
+            if pgrep -f 'java -jar'; then
+              echo "Aplicación iniciada correctamente"
+              exit 0
+            else
+              echo "Error: La aplicación no se inició correctamente"
+              exit 1
+            fi
