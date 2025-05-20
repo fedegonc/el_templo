@@ -30,7 +30,7 @@ jobs:
           username: ec2-user
           key: ${{ secrets.EC2_KEY }}
           source: target/*.jar
-          target: /home/ec2-user/el_templo/
+          target: /home/ec2-user/
 
       - name: Setup SSH key
         run: |
@@ -48,15 +48,15 @@ jobs:
           pkill -f 'java -jar' || echo "No hay procesos Java en ejecución"
           
           # Asegurar que el directorio existe
-          mkdir -p /home/ec2-user/el_templo/logs
+          mkdir -p /home/ec2-user/logs
           
           # Obtener el nombre del JAR más reciente
-          JAR_FILE=$(ls -t /home/ec2-user/el_templo/*.jar | head -n 1)
+          JAR_FILE=$(ls -t /home/ec2-user/*.jar | head -n 1)
           echo "Iniciando aplicación con: $JAR_FILE"
           
           # Iniciar la aplicación en segundo plano
-          cd /home/ec2-user/el_templo
-          nohup java -jar $JAR_FILE > /home/ec2-user/el_templo/logs/output.log 2>&1 &
+          cd /home/ec2-user
+          nohup java -jar $JAR_FILE > /home/ec2-user/logs/output.log 2>&1 &
           
           # Esperar unos segundos para asegurar que la aplicación inicie
           sleep 5
