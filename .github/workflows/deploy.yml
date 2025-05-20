@@ -48,15 +48,15 @@ jobs:
           pkill -f 'java -jar' || echo "No hay procesos Java en ejecución"
           
           # Asegurar que el directorio existe
-          mkdir -p /home/ec2-user/app/logs
+          mkdir -p /home/ec2-user/el_templo/logs
           
           # Obtener el nombre del JAR más reciente
-          JAR_FILE=$(ls -t /home/ec2-user/app/*.jar | head -n 1)
+          JAR_FILE=$(ls -t /home/ec2-user/el_templo/*.jar | head -n 1)
           echo "Iniciando aplicación con: $JAR_FILE"
           
           # Iniciar la aplicación en segundo plano
-          cd /home/ec2-user/app
-          nohup java -jar $JAR_FILE > /home/ec2-user/app/logs/output.log 2>&1 &
+          cd /home/ec2-user/el_templo
+          nohup java -jar $JAR_FILE > /home/ec2-user/el_templo/logs/output.log 2>&1 &
           
           # Esperar unos segundos para asegurar que la aplicación inicie
           sleep 5
