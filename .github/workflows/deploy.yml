@@ -30,7 +30,7 @@ jobs:
           username: ec2-user
           key: ${{ secrets.EC2_KEY }}
           source: target/*.jar
-          target: /home/ec2-user/app/
+          target: /home/ec2-user/el_templo/
 
       - name: Setup SSH key
         run: |
