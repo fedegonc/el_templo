@@ -7,7 +7,7 @@ on:
       - main
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -23,9 +23,21 @@ jobs:
       - name: Build with Maven
         run: mvn clean package -DskipTests
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
+      - name: Copy jar to EC2
+        uses: appleboy/scp-action@v0.1.4
         with:
-          name: app-jar
-          path: target/*.jar
-          retention-days: 5
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_KEY }}
+          source: target/*.jar
+          target: /home/ec2-user/app/
+
+      - name: Restart app on EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            pkill -f 'java -jar' || true
+            nohup java -jar /home/ec2-user/app/$(ls -t /home/ec2-user/app/*.jar | head -n 1) > output.log 2>&1 &
