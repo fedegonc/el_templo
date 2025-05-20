@@ -60,13 +60,7 @@
             <version>2.7.8</version>
         </dependency>
         
-        <!-- H2 Database (para desarrollo) -->
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>2.1.214</version>
-            <scope>runtime</scope>
-        </dependency>
+
         
         <!-- PostgreSQL Driver -->
         <dependency>
@@ -75,12 +69,7 @@
             <version>42.6.0</version>
         </dependency>
         
-        <!-- AWS SDK para S3 -->
-        <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-java-sdk-s3</artifactId>
-            <version>1.12.529</version>
-        </dependency>
+
         
         <!-- JAXB API -->
         <dependency>
