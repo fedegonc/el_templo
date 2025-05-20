@@ -32,40 +32,44 @@ jobs:
           source: target/*.jar
           target: /home/ec2-user/app/
 
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+      
       - name: Restart app on EC2
-        uses: appleboy/ssh-action@v0.1.10
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ec2-user
-          key: ${{ secrets.EC2_KEY }}
-          port: 22
-          timeout: 60s
-          command_timeout: 10m
-          script_stop: true
-          debug: true
-          script: |
-            # Detener la aplicación actual si está en ejecución
-            pkill -f 'java -jar' || echo "No hay procesos Java en ejecución"
-            
-            # Asegurar que el directorio existe
-            mkdir -p /home/ec2-user/app/logs
-            
-            # Obtener el nombre del JAR más reciente
-            JAR_FILE=$(ls -t /home/ec2-user/app/*.jar | head -n 1)
-            echo "Iniciando aplicación con: $JAR_FILE"
-            
-            # Iniciar la aplicación en segundo plano
-            cd /home/ec2-user/app
-            nohup java -jar $JAR_FILE > /home/ec2-user/app/logs/output.log 2>&1 &
-            
-            # Esperar unos segundos para asegurar que la aplicación inicie
-            sleep 5
-            
-            # Verificar que la aplicación está en ejecución
-            if pgrep -f 'java -jar'; then
-              echo "Aplicación iniciada correctamente"
-              exit 0
-            else
-              echo "Error: La aplicación no se inició correctamente"
-              exit 1
-            fi
+        run: |
+          # Crear script de reinicio
+          cat > restart_app.sh << 'EOL'
+          #!/bin/bash
+          # Detener la aplicación actual si está en ejecución
+          pkill -f 'java -jar' || echo "No hay procesos Java en ejecución"
+          
+          # Asegurar que el directorio existe
+          mkdir -p /home/ec2-user/app/logs
+          
+          # Obtener el nombre del JAR más reciente
+          JAR_FILE=$(ls -t /home/ec2-user/app/*.jar | head -n 1)
+          echo "Iniciando aplicación con: $JAR_FILE"
+          
+          # Iniciar la aplicación en segundo plano
+          cd /home/ec2-user/app
+          nohup java -jar $JAR_FILE > /home/ec2-user/app/logs/output.log 2>&1 &
+          
+          # Esperar unos segundos para asegurar que la aplicación inicie
+          sleep 5
+          
+          # Verificar que la aplicación está en ejecución
+          if pgrep -f 'java -jar'; then
+            echo "Aplicación iniciada correctamente"
+            exit 0
+          else
+            echo "Error: La aplicación no se inició correctamente"
+            exit 1
+          fi
+          EOL
+          
+          # Ejecutar el script en el servidor remoto
+          cat restart_app.sh | ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_HOST }} 'bash -s'
