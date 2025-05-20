@@ -33,11 +33,16 @@ jobs:
           target: /home/ec2-user/app/
 
       - name: Restart app on EC2
-        uses: appleboy/ssh-action@v0.1.4
+        uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ec2-user
           key: ${{ secrets.EC2_KEY }}
+          port: 22
+          timeout: 60s
+          command_timeout: 10m
+          script_stop: true
+          debug: true
           script: |
             # Detener la aplicación actual si está en ejecución
             pkill -f 'java -jar' || echo "No hay procesos Java en ejecución"
